@@ -1,0 +1,23 @@
+{ "aaData": [
+	{
+		"engine": "Trident",
+		"browser": "Internet Explorer 4.0",
+		"platform": "Win 95+",
+		"version": "4",
+		"grade": "X"
+	},
+	{
+		"engine": "Webkit",
+		"browser": "Safari 3.0",
+		"platform": "OSX.4+",
+		"version": "522.1",
+		"grade": "A"
+	},
+	{
+		"engine": "Other browsers",
+		"browser": "All others",
+		"platform": "-",
+		"version": "-",
+		"grade": "U"
+	}
+] }
