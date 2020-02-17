@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cadastro | Musikladen</title>
+<link rel="shortcut icon" href="images/favicon.png"/>
+<link rel="stylesheet" href="js/jquery/estilo.css"/>
+<link rel="stylesheet" href="js/jquery/materialize.min.css">
+<link rel="stylesheet" href="js/jquery/jquery-ui.css" type="text/css"/>
+<link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
+<script src="js/jquery/jquery-3.0.0.min.js" type="text/javascript"></script>
+<script src="js/jquery/jquery.maskedinput.js" type="text/javascript"></script>
+<script src="js/jquery/jquery-ui.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+  
+  <style type="text/css">
+  
+    .collection .collection-item{
+      line-height: 1.0rem;
+    }
+  
+  </style>
+</head>
+<body style="background:url(images/backgroundf.jpg)">
+
+<BR><BR>
+<div class="container">
+  <form class="col s12" name="form-contato" id="form-contato" class="contato" action="cadastro.php" enctype='multipart/form-data' method="post">
+    <div class="row"> 
+      <div class="input-field col s6">
+        <input type="text" placeholder="Nome" id="nome" class="required" name="nome" autofocus>
+        <label for="nome" class="active">Nome</label>
+      </div>  
+      <div class="input-field col s6">
+        <input type="text" placeholder="CPF" id="cpf" class="required" name="cpf" autofocus>
+        <label for="cpf" class="active">CPF</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" placeholder="__/__/____" name="data_nascimento" class="required" id="data_nascimento">
+        <label for="data_nascimento" class="active">Data de Nascimento</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="tel" placeholder="Telefone" id="telefone" name="telefone" class="required" autofocus>
+        <label for="telefone" class="active">Telefone</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input type="text" placeholder="E-Mail" name="email" class="required" id="email">
+        <label for="email" class="active">E-Mail</label>
+      </div>  
+      <div class="input-field col s6">
+        <input type="text" placeholder="Informe o CEP" id="cep" name="cep" class="required" autofocus>
+        <label for="cep" class="active">CEP</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s1">
+        <input type="text" placeholder="UF" name="uf" class="required" id="uf">
+        <label for="uf" class="active">UF</label>
+      </div>    
+      <div class="input-field col s5">
+        <input type="text" placeholder="Informe a cidade" id="cidade" class="required" name="cidade" >
+        <label for="cidade" class="active">Cidade</label>
+      </div>
+      <div class="input-field col s6">
+        <input type="text" placeholder="Rua" name="rua" class="required" id="rua">
+        <label for="rua" class="active">Rua</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s4">
+        <input type="text" placeholder="Nº" name="numero" class="required" id="numero">
+        <label for="numero" class="active">Número</label>
+      </div>
+      <div class="input-field col s4">
+        <input type="text" placeholder="Complemento" name="complemento" id="complemento">
+        <label for="complemento" class="active">Complemento (preencha 'N/D' caso não possua)</label>
+      </div>
+      <div class="input-field col s4">
+        <input type="text" placeholder="Senha" name="senha" class="required" id="senha">
+        <label for="password" class="active">Senha</label>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary" name="incluir" id='incluir'>Gravar</button>
+    <button type="reset" class="btn btn-primary">RESET</button>
+    </div>
+  </form>
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+  $("#form-contato").get(0).reset();
+  $(function() {
+        $("input[type=submit], a, button").button();
+    });
+  $('#incluir').click(function() {  
+ 
+        $(".error").hide();
+        var hasError = false;
+        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+ 
+        var emailaddressVal = $("#email").val();
+        if(emailaddressVal == '') {
+            $("#email").after('<span class="error">Por favor, preecha seu e-mail</span>');
+            hasError = true;
+        }
+ 
+        else if(!emailReg.test(emailaddressVal)) {
+            $("#email").after('<span class="error">Insira um e-mail valido</span>');
+            hasError = true;
+        }
+ 
+        if(hasError == true) { return false; }
+ 
+    });
+  $("input").attr("required", true);
+  $("#cpf").mask("999.999.999-99");
+    $("#telefone").mask("(99) 9999-9999?9");
+  $("#cep").mask("99999-999",{completed:function(){
+    var cep = $(this).val().replace(/[^0-9]/, "");
+    if(cep.length != 8){
+      return false;
+    }
+    var url = "http://viacep.com.br/ws/"+cep+"/json/";
+    
+    $.getJSON(url, function(dadosRetorno){
+      try{
+        $("#rua").val(dadosRetorno.logradouro);
+        $("#cidade").val(dadosRetorno.localidade);
+        $("#uf").val(dadosRetorno.uf);
+        $("#numero").focus();
+      }catch(ex){}
+    });
+  }});
+  
+ $.datepicker.setDefaults($.datepicker.regional['pt-br']);
+  $("#data_nascimento").mask("99/99/9999").datepicker();
+  $("#cidade").autocomplete({source: cidades})
+  $("#form-contato").validate({
+    messages: {
+      nome: {
+        required: " Este campo é obrigatório"
+      },
+      endereco: {
+        required: " Este campo é obrigatório"
+      },
+      cidade: {
+        required: " Este campo é obrigatório"
+      }
+    }
+  });
+})
+
+</script>
+<script type="text/javascript">
+</script>
+</body>
+</html>
